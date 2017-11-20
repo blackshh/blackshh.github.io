@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <title>laravel+vue跳转拦截器 - blackshh</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='/atom.xml' rel='alternate' type='application/rss+xml'>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<script src="/js/jquery.js"></script>
+<script src="/js/basics.js"></script>
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type'>
+
+
+  </head>
+  <body>
+    <header>
+  <a id='go-back-home' href='/'><img src='/images/scribble.png' alt='Home' width='70' height='70'></a>
+  <p>blackshh</p>
+  <p>纸上得来终觉浅，绝知此事要躬行。</p>
+</header>
+
+    <div id='container'>
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+      <section class='paging'>
+  
+    <div class='left'>
+      <a href='/2017/09/01/laravel验证码/'>
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class='right'>
+      <a href='/2017/07/24/hello/'>
+        ›
+      </a>
+    </div>
+  
+</section>
+
+      <div class='content'>
+        <section class='post'>
+          <h1>
+            
+            laravel+vue跳转拦截器
+          </h1>
+          <p>这两天写项目的时候遇到的一个问题：基于laravel和vue实现的后台系统，实现跳转拦截，在前端页面跳转的时候判断用户是否已经登录，若没有就跳到登录界面。<br>总的来说，我有已下两种解决思路：</p>
+<p> <strong>1. 在laravel中使用中间件，然后在渲染界面的时候使用中间件。</strong></p>
+<p>在laravel中的 /app/Http/Middleware/下定义了一个CheckLogin.php中间件，内容如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Middleware</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Closure</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Facades</span>\<span class="title">Auth</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CheckLogin</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Handle an incoming request.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Closure  $next</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">empty</span>(Auth::id()))</span><br><span class="line">            <span class="keyword">return</span>  redirect(<span class="string">'/'</span>);</span><br><span class="line">        <span class="keyword">else</span>    </span><br><span class="line">            <span class="keyword">return</span> $next($request);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在Kernel.php中注册一下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> $routeMiddleware = [</span><br><span class="line">    <span class="string">'auth'</span> =&gt; \Illuminate\Auth\Middleware\Authenticate::class,</span><br><span class="line">     ...</span><br><span class="line">    <span class="string">'checkLogin'</span> =&gt; \App\Http\Middleware\CheckLogin::class,</span><br><span class="line">];</span><br></pre></td></tr></table></figure></p>
+<p>然后再在 vue中的main.js中添加拦截器：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">window.axios.interceptors.response.<span class="keyword">use</span>(</span><br><span class="line">    response =&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;,</span><br><span class="line">    error =&gt; &#123;</span><br><span class="line">        <span class="comment">//请求错误时做些事</span></span><br><span class="line">        <span class="keyword">if</span> (error.response) &#123;</span><br><span class="line">            <span class="keyword">switch</span> (error.response.status) &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">403</span>:</span><br><span class="line">					location.href=<span class="string">'/login'</span>;  </span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">200</span>:</span><br><span class="line">                    window.location.href = <span class="string">"/"</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Promise.reject(error.response.data);</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure></p>
+<p> <strong>2. 使用vue路由的requireAuth关键字，判断该路由的访问是否需要登录。</strong></p>
+<p>首先在定义路由的时候就需要多添加一个自定义字段requireAuth，用于判断该路由的访问是否需要登录。如果用户已经登录，则顺利进入路由， 否则就进入登录页面。在路由管理页面添加meta字段</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import Vue from <span class="string">'vue'</span></span><br><span class="line">import Router from <span class="string">'vue-router'</span></span><br><span class="line"></span><br><span class="line">Vue.<span class="keyword">use</span>(Router)</span><br><span class="line"><span class="keyword">const</span> routes = [</span><br><span class="line">	&#123;</span><br><span class="line">		path: <span class="string">'/'</span>,</span><br><span class="line">		name: <span class="string">"欢迎"</span>,</span><br><span class="line">		meta: &#123;</span><br><span class="line">            requireAuth: <span class="keyword">true</span>,  <span class="comment">// 添加该字段，表示进入这个路由是需要登录的</span></span><br><span class="line">        &#125;,</span><br><span class="line">		component: resolve =&gt; <span class="keyword">require</span>([<span class="string">"../components/Hello.vue"</span>], resolve)</span><br><span class="line">	&#125;,</span><br><span class="line">	&#123;</span><br><span class="line">		path: <span class="string">'/login'</span>,</span><br><span class="line">		name: <span class="string">"登录"</span>,</span><br><span class="line">		component: resolve =&gt; <span class="keyword">require</span>([<span class="string">"../view/login/login.vue"</span>], resolve)</span><br><span class="line">	&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>定义完路由后，我们主要是利用vue-router提供的钩子函数beforeEach()对路由进行判断。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">router.beforeEach((to, from, next) =&gt; &#123;</span><br><span class="line">  <span class="comment">//NProgress.start();</span></span><br><span class="line">  <span class="keyword">if</span> (to.path == <span class="string">'/login'</span>) &#123;</span><br><span class="line">    sessionStorage.removeItem(<span class="string">'user'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  let user = JSON.parse(sessionStorage.getItem(<span class="string">'user'</span>));</span><br><span class="line">  <span class="comment">// 判断该路由是否需要登录权限，如果登录过会获取到user的信息。</span></span><br><span class="line">  <span class="keyword">if</span> (!user &amp;&amp; to.path != <span class="string">'/login'</span>) &#123;</span><br><span class="line">    next(&#123; path: <span class="string">'/login'</span> &#125;)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    next()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>每个钩子方法接收三个参数： </p>
+<ul>
+<li>to: Route: 即将要进入的目标 路由对象 </li>
+<li>from: Route: 当前导航正要离开的路由 </li>
+<li>next: Function: 一定要调用该方法来 resolve 这个钩子。执行效果依赖 next 方法的调用参数。 </li>
+<li>next(): 进行管道中的下一个钩子。如果全部钩子执行完了，则导航的状态就是 confirmed （确认的）。 </li>
+<li>next(false): 中断当前的导航。如果浏览器的 URL 改变了（可能是用户手动或者浏览器后退按钮），那么 URL 地址会重置到 from 路由对应的地址。 </li>
+<li>next(‘/’) 或者 next({ path: ‘/’ }): 跳转到一个不同的地址。当前的导航被中断，然后进行一个新的导航。</li>
+</ul>
+<p>确保要调用 next 方法，否则钩子就不会被 resolved。</p>
+<p>其中，sessionStorage.getItem(‘user’) 获取用户信息，判断是否登录。我们需要在用户登录的时候记录下登录状态，就可以通过vue-router来阻止页面跳转了。</p>
+<p><strong>总结</strong><br>这两种方法都可以实现跳转拦截，各自的优缺点的使用中间件可能会更安全，但使用中间件阻止跳转的的话，登录界面就不能引用中间件，所以需要把登录界面从vue后台中独立出来。使用vue-router阻止的话，别人可能会通过阻止js来绕过（我没试过，不确定），但是会更少的请求后台，项目目录也会更清晰。只能说各有各的特点。</p>
+
+          <br>
+<div class='date' style="text-align: right">
+    <p><strong>blackshh</strong></p>
+    <p>2017-08-28</p>
+</div>
+
+
+
+        </section>
+      </div>
+      
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+    </div>
+    <footer>
+  <span class='muted'>blackshh@2017</span><br>
+  <span>built with Hexo using <a class='muted' href="https://github.com/chloerei/scribble">Scribble</a></span>
+  <br>
+  <br>
+</footer>
+
+  </body>
+</html>

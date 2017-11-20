@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <title>laravel使用mews/captcha图片验证码解决方案 - blackshh</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='/atom.xml' rel='alternate' type='application/rss+xml'>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<script src="/js/jquery.js"></script>
+<script src="/js/basics.js"></script>
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type'>
+
+
+  </head>
+  <body>
+    <header>
+  <a id='go-back-home' href='/'><img src='/images/scribble.png' alt='Home' width='70' height='70'></a>
+  <p>blackshh</p>
+  <p>纸上得来终觉浅，绝知此事要躬行。</p>
+</header>
+
+    <div id='container'>
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+      <section class='paging'>
+  
+    <div class='left'>
+      <a href='/2017/09/02/如何变得有思想/'>
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class='right'>
+      <a href='/2017/08/28/laravel+vue跳转拦截器/'>
+        ›
+      </a>
+    </div>
+  
+</section>
+
+      <div class='content'>
+        <section class='post'>
+          <h1>
+            
+            laravel使用mews/captcha图片验证码解决方案
+          </h1>
+          <h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p> <a href="https://github.com/mewebstudio/captcha" target="_blank" rel="noopener">mews/captcha</a> 是一个非常易于集成的图片验证码扩展包，使用此扩展包可以分分钟给你的网站加上验证码功能。<br> <img src="http://img.blog.csdn.net/20170901154745951?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMjQwMjM2MTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h3><p>1). 使用 composer 安装：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> mews/captcha</span><br></pre></td></tr></table></figure>
+<p>2). 修改 config/app 文件，添加 ServiceProvider：</p>
+<p>在 providers 数组内追加如下内容</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">    ...</span><br><span class="line">    Mews\Captcha\CaptchaServiceProvider::class,</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+<p>在 aliases 数组内追加如下内容</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'aliases'</span> =&gt; [</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'Captcha'</span> =&gt; Mews\Captcha\Facades\Captcha::class,</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+<p>3). 运行 php artisan vendor:publish 生成配置文件 config/captcha.php</p>
+<p>我们可以打开配置文件，查看其内容：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line"></span><br><span class="line">    <span class="string">'characters'</span> =&gt; <span class="string">'2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ'</span>,</span><br><span class="line"></span><br><span class="line">    <span class="string">'default'</span>   =&gt; [</span><br><span class="line">        <span class="string">'length'</span>    =&gt; <span class="number">5</span>,</span><br><span class="line">        <span class="string">'width'</span>     =&gt; <span class="number">120</span>,</span><br><span class="line">        <span class="string">'height'</span>    =&gt; <span class="number">36</span>,</span><br><span class="line">        <span class="string">'quality'</span>   =&gt; <span class="number">90</span>,</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    <span class="string">'flat'</span>   =&gt; [</span><br><span class="line">        <span class="string">'length'</span>    =&gt; <span class="number">6</span>,</span><br><span class="line">        <span class="string">'width'</span>     =&gt; <span class="number">160</span>,</span><br><span class="line">        <span class="string">'height'</span>    =&gt; <span class="number">46</span>,</span><br><span class="line">        <span class="string">'quality'</span>   =&gt; <span class="number">90</span>,</span><br><span class="line">        <span class="string">'lines'</span>     =&gt; <span class="number">6</span>,</span><br><span class="line">        <span class="string">'bgImage'</span>   =&gt; <span class="keyword">false</span>,</span><br><span class="line">        <span class="string">'bgColor'</span>   =&gt; <span class="string">'#ecf2f4'</span>,</span><br><span class="line">        <span class="string">'fontColors'</span>=&gt; [<span class="string">'#2c3e50'</span>, <span class="string">'#c0392b'</span>, <span class="string">'#16a085'</span>, <span class="string">'#c0392b'</span>, <span class="string">'#8e44ad'</span>, <span class="string">'#303f9f'</span>, <span class="string">'#f57c00'</span>, <span class="string">'#795548'</span>],</span><br><span class="line">        <span class="string">'contrast'</span>  =&gt; <span class="number">-5</span>,</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    <span class="string">'mini'</span>   =&gt; [</span><br><span class="line">        <span class="string">'length'</span>    =&gt; <span class="number">3</span>,</span><br><span class="line">        <span class="string">'width'</span>     =&gt; <span class="number">60</span>,</span><br><span class="line">        <span class="string">'height'</span>    =&gt; <span class="number">32</span>,</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    <span class="string">'inverse'</span>   =&gt; [</span><br><span class="line">        <span class="string">'length'</span>    =&gt; <span class="number">5</span>,</span><br><span class="line">        <span class="string">'width'</span>     =&gt; <span class="number">120</span>,</span><br><span class="line">        <span class="string">'height'</span>    =&gt; <span class="number">36</span>,</span><br><span class="line">        <span class="string">'quality'</span>   =&gt; <span class="number">90</span>,</span><br><span class="line">        <span class="string">'sensitive'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'angle'</span>     =&gt; <span class="number">12</span>,</span><br><span class="line">        <span class="string">'sharpen'</span>   =&gt; <span class="number">10</span>,</span><br><span class="line">        <span class="string">'blur'</span>      =&gt; <span class="number">2</span>,</span><br><span class="line">        <span class="string">'invert'</span>    =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'contrast'</span>  =&gt; <span class="number">-5</span>,</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>可以看到这些配置选项都非常通俗易懂，你可以在此修改对应选项自定义验证码的长度、背景颜色、文字颜色等属性，在此不做过多叙述。</p>
+<p>至此，此扩展包就安装完成了。</p>
+<h3 id="2-用例"><a href="#2-用例" class="headerlink" title="2. 用例"></a>2. 用例</h3><p>扩展包提供了两个函数用于展示验证码：</p>
+<p>captcha_img() - 返回 img 格式的验证码；<br>captcha_src() - 返回验证码的 url 地址。<br>在你的模板文件里（如：register.blade.php）直接调用即可：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class="form-group code"&gt;</span><br><span class="line">    &lt;label&gt;验证码&lt;/label&gt;</span><br><span class="line">    &lt;input class="tt-text" name="captcha"&gt;</span><br><span class="line">    &#123;!! captcha_img() !!&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>又或者：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class="form-group code"&gt;</span><br><span class="line">    &lt;label&gt;验证码&lt;/label&gt;</span><br><span class="line">    &lt;input class="tt-text" name="captcha"&gt;</span><br><span class="line">    &lt;img src=<span class="string">"&#123;&#123;captcha_src()&#125;&#125;"</span>&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
+<p>输出的效果如下：<br><img src="http://img.blog.csdn.net/20170901155556503?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMjQwMjM2MTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>使用自定义样式的验证码#</p>
+<p>如果想使用自定义的验证码，如上文配置文件里的 inverse 选项：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="string">'default'</span>   =&gt; [</span><br><span class="line">        ...</span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">    <span class="string">'inverse'</span>   =&gt; [</span><br><span class="line">        <span class="string">'length'</span>    =&gt; <span class="number">5</span>,</span><br><span class="line">        <span class="string">'width'</span>     =&gt; <span class="number">120</span>,</span><br><span class="line">        <span class="string">'height'</span>    =&gt; <span class="number">36</span>,</span><br><span class="line">        <span class="string">'quality'</span>   =&gt; <span class="number">90</span>,</span><br><span class="line">        <span class="string">'sensitive'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'angle'</span>     =&gt; <span class="number">12</span>,</span><br><span class="line">        <span class="string">'sharpen'</span>   =&gt; <span class="number">10</span>,</span><br><span class="line">        <span class="string">'blur'</span>      =&gt; <span class="number">2</span>,</span><br><span class="line">        <span class="string">'invert'</span>    =&gt; <span class="keyword">true</span>,</span><br><span class="line">        <span class="string">'contrast'</span>  =&gt; <span class="number">-5</span>,</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>则只要这样调用即可：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;!! captcha_img(<span class="string">'inverse'</span>) !!&#125;</span><br><span class="line">&#123;&#123;captcha_src(<span class="string">'inverse'</span>)&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>怎么样，是不是很简单呢？</p>
+<p>2.2 判断用户输入的验证码是否正确</p>
+<p>扩展包使用了 自定义验证规则 方式扩展了验证规则，我们只要在对应的 Controller 添加以下的规则即可：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;validate($request, [</span><br><span class="line">    <span class="string">'captcha'</span> =&gt; <span class="string">'required|captcha'</span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+<p>以上。</p>
+
+          <br>
+<div class='date' style="text-align: right">
+    <p><strong>blackshh</strong></p>
+    <p>2017-09-01</p>
+</div>
+
+
+
+        </section>
+      </div>
+      
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+    </div>
+    <footer>
+  <span class='muted'>blackshh@2017</span><br>
+  <span>built with Hexo using <a class='muted' href="https://github.com/chloerei/scribble">Scribble</a></span>
+  <br>
+  <br>
+</footer>
+
+  </body>
+</html>
