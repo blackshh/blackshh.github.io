@@ -52,6 +52,7 @@
           </h1>
           <blockquote>
 <p>收集在业务中经常使用的正则表达式实例，方便以后进行查找，减少工作量。</p>
+</blockquote>
 <h2 id="1-校验基本日期格式"><a href="#1-校验基本日期格式" class="headerlink" title="1. 校验基本日期格式"></a>1. 校验基本日期格式</h2><pre><code>var reg1 = /^\d{4}(\-|\/|\.)\d{1,2}\1\d{1,2}$/;
 var reg2 = /^(^(\d{4}|\d{2})(\-|\/|\.)\d{1,2}\3\d{1,2}$)|(^\d{4}年\d{1,2}月\d{1,2}日$)$/;
 </code></pre><h2 id="2-校验密码强度"><a href="#2-校验密码强度" class="headerlink" title="2. 校验密码强度"></a>2. 校验密码强度</h2><pre><code>密码的强度必须是包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间。
@@ -95,8 +96,7 @@ var reg = /(&lt;a\\s*(?!.*\\brel=)[^&gt;]*)(href=&quot;https?:\/\/)((?!(?:(?:www
 var reg = /^\\s*[a-zA-Z\\-]+\\s*[:]{1}\\s[a-zA-Z0-9\\s.#]+[;]{1}/;
 </code></pre><h2 id="20-抽取注释"><a href="#20-抽取注释" class="headerlink" title="20. 抽取注释"></a>20. 抽取注释</h2><pre><code>如果你需要移除HMTL中的注释，可以使用如下的表达式。
 var reg = /&lt;!--(.*?)--&gt;/;
-</code></pre></blockquote>
-
+</code></pre>
           <br>
 <div class='date' style="text-align: right">
     <p><strong>blackshh</strong></p>
