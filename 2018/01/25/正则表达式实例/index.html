@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <title>正则表达式实例 - blackshh</title>
+    <link href='/images/fav.png' rel='shortcut icon'>
+<link href='/atom.xml' rel='alternate' type='application/rss+xml'>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<script src="/js/jquery.js"></script>
+<script src="/js/basics.js"></script>
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type'>
+
+
+  </head>
+  <body>
+    <header>
+  <a id='go-back-home' href='/'><img src='/images/scribble.png' alt='Home' width='70' height='70'></a>
+  <p>blackshh</p>
+  <p>纸上得来终觉浅，绝知此事要躬行。</p>
+</header>
+
+    <div id='container'>
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+      <section class='paging'>
+  
+  
+    <div class='right'>
+      <a href='/2017/09/02/如何变得有思想/'>
+        ›
+      </a>
+    </div>
+  
+</section>
+
+      <div class='content'>
+        <section class='post'>
+          <h1>
+            
+            正则表达式实例
+          </h1>
+          <blockquote>
+<p>收集在业务中经常使用的正则表达式实例，方便以后进行查找，减少工作量。</p>
+<h2 id="1-校验基本日期格式"><a href="#1-校验基本日期格式" class="headerlink" title="1. 校验基本日期格式"></a>1. 校验基本日期格式</h2><pre><code>var reg1 = /^\d{4}(\-|\/|\.)\d{1,2}\1\d{1,2}$/;
+var reg2 = /^(^(\d{4}|\d{2})(\-|\/|\.)\d{1,2}\3\d{1,2}$)|(^\d{4}年\d{1,2}月\d{1,2}日$)$/;
+</code></pre><h2 id="2-校验密码强度"><a href="#2-校验密码强度" class="headerlink" title="2. 校验密码强度"></a>2. 校验密码强度</h2><pre><code>密码的强度必须是包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间。
+var reg = /^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/;
+</code></pre><h2 id="3-校验中文"><a href="#3-校验中文" class="headerlink" title="3. 校验中文"></a>3. 校验中文</h2><pre><code>字符串仅能是中文。
+var reg = /^[\\u4e00-\\u9fa5]{0,}$/;
+</code></pre><h2 id="4-由数字、26个英文字母或下划线组成的字符串"><a href="#4-由数字、26个英文字母或下划线组成的字符串" class="headerlink" title="4. 由数字、26个英文字母或下划线组成的字符串"></a>4. 由数字、26个英文字母或下划线组成的字符串</h2><pre><code>var reg = /^\\w+$/;
+</code></pre><h2 id="5-校验E-Mail-地址"><a href="#5-校验E-Mail-地址" class="headerlink" title="5. 校验E-Mail 地址"></a>5. 校验E-Mail 地址</h2><pre><code>同密码一样，下面是E-mail地址合规性的正则检查语句。
+var reg = /[\\w!#$%&amp;&apos;*+/=?^_`{|}~-]+(?:\\.[\\w!#$%&amp;&apos;*+/=?^_`{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?/;
+</code></pre><h2 id="6-校验身份证号码"><a href="#6-校验身份证号码" class="headerlink" title="6. 校验身份证号码"></a>6. 校验身份证号码</h2><pre><code>下面是身份证号码的正则校验。15 或 18位。
+15位：
+var reg = /^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$/;
+18位：
+var reg = /^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$/;
+</code></pre><h2 id="7-校验日期"><a href="#7-校验日期" class="headerlink" title="7. 校验日期"></a>7. 校验日期</h2><pre><code>“yyyy-mm-dd” 格式的日期校验，已考虑平闰年。
+var reg = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/;
+</code></pre><h2 id="8-校验金额"><a href="#8-校验金额" class="headerlink" title="8. 校验金额"></a>8. 校验金额</h2><pre><code>金额校验，精确到2位小数。
+var reg = /^[0-9]+(.[0-9]{2})?$/;
+</code></pre><h2 id="9-校验手机号"><a href="#9-校验手机号" class="headerlink" title="9. 校验手机号"></a>9. 校验手机号</h2><pre><code>下面是国内 13、15、18开头的手机号正则表达式。（可根据目前国内收集号扩展前两位开头号码）
+var reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$/;
+</code></pre><h2 id="10-判断IE的版本"><a href="#10-判断IE的版本" class="headerlink" title="10. 判断IE的版本"></a>10. 判断IE的版本</h2><pre><code>IE目前还没被完全取代，很多页面还是需要做版本兼容，下面是IE版本检查的表达式。
+var reg = /^.*MSIE [5-8](?:\\.[0-9]+)?(?!.*Trident\\\/[5-9]\\.0).*$/;
+</code></pre><h2 id="11-校验IP-v4地址"><a href="#11-校验IP-v4地址" class="headerlink" title="11. 校验IP-v4地址"></a>11. 校验IP-v4地址</h2><pre><code>var reg = /\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b/;
+</code></pre><h2 id="12-校验IP-v6地址"><a href="#12-校验IP-v6地址" class="headerlink" title="12. 校验IP-v6地址"></a>12. 校验IP-v6地址</h2><pre><code>var reg = /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/;
+</code></pre><h2 id="13-检查URL的前缀"><a href="#13-检查URL的前缀" class="headerlink" title="13. 检查URL的前缀"></a>13. 检查URL的前缀</h2><pre><code>应用开发中很多时候需要区分请求是HTTPS还是HTTP，通过下面的表达式可以取出一个url的前缀然后再逻辑判断。
+if (!s.match(/^[a-zA-Z]+:\/\//)) {
+    s = &apos;http://&apos; + s;
+}
+</code></pre><h2 id="14-提取URL链接"><a href="#14-提取URL链接" class="headerlink" title="14. 提取URL链接"></a>14. 提取URL链接</h2><pre><code>下面的这个表达式可以筛选出一段文本中的URL。
+var reg = /^(f|ht){1}(tp|tps):\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&amp;=]*)?/;
+</code></pre><h2 id="15-文件路径及扩展名校验"><a href="#15-文件路径及扩展名校验" class="headerlink" title="15. 文件路径及扩展名校验"></a>15. 文件路径及扩展名校验</h2><pre><code>验证windows下文件路径和扩展名（下面的例子中为.txt文件）
+var reg = /^([a-zA-Z]\\:|\\\\)\\\\([^\\]+\\)*[^\\/:*?&quot;&lt;&gt;|]+\\.txt(l)?$/;
+</code></pre><h2 id="16-提取Color-Hex-Codes"><a href="#16-提取Color-Hex-Codes" class="headerlink" title="16. 提取Color Hex Codes"></a>16. 提取Color Hex Codes</h2><pre><code>有时需要抽取网页中的颜色代码，可以使用下面的表达式。
+var reg = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+</code></pre><h2 id="17-提取网页图片"><a href="#17-提取网页图片" class="headerlink" title="17. 提取网页图片"></a>17. 提取网页图片</h2><pre><code>假若你想提取网页中所有图片信息，可以利用下面的表达式。
+var reg = /\\&lt; *[img][^\\&gt;]*[src] *= *[\\&quot;\&apos;]{0,1}([^\\&quot;\&apos;\ &gt;]*)/;
+</code></pre><h2 id="18-提取页面超链接"><a href="#18-提取页面超链接" class="headerlink" title="18. 提取页面超链接"></a>18. 提取页面超链接</h2><pre><code>提取html中的超链接。
+var reg = /(&lt;a\\s*(?!.*\\brel=)[^&gt;]*)(href=&quot;https?:\/\/)((?!(?:(?:www\\.)?&apos;.implode(&apos;|(?:www\\.)?&apos;,    $follow_list).&apos;))[^&quot;]+)&quot;((?!.*\\brel=)[^&gt;]*)(?:[^&gt;]*)&gt;/;
+&lt;/a\\s*(?!.*\\brel=)[^&gt;
+</code></pre><h2 id="19-查找CSS属性"><a href="#19-查找CSS属性" class="headerlink" title="19. 查找CSS属性"></a>19. 查找CSS属性</h2><pre><code>通过下面的表达式，可以搜索到相匹配的CSS属性。
+var reg = /^\\s*[a-zA-Z\\-]+\\s*[:]{1}\\s[a-zA-Z0-9\\s.#]+[;]{1}/;
+</code></pre><h2 id="20-抽取注释"><a href="#20-抽取注释" class="headerlink" title="20. 抽取注释"></a>20. 抽取注释</h2><pre><code>如果你需要移除HMTL中的注释，可以使用如下的表达式。
+var reg = /&lt;!--(.*?)--&gt;/;
+</code></pre></blockquote>
+
+          <br>
+<div class='date' style="text-align: right">
+    <p><strong>blackshh</strong></p>
+    <p>2018-01-25</p>
+</div>
+
+
+
+        </section>
+      </div>
+      
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+    </div>
+    <footer>
+  <span class='muted'>blackshh@2017</span><br>
+  <span>built with Hexo using <a class='muted' href="https://github.com/chloerei/scribble">Scribble</a></span>
+  <br>
+  <br>
+</footer>
+
+  </body>
+</html>
