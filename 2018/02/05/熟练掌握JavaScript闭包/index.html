@@ -2,7 +2,7 @@
 
 <head>
   <title>
-     -
+    熟练掌握JavaScript闭包 -
       blackshh
   </title>
   <link href='/images/fav.png' rel='shortcut icon'>
@@ -56,9 +56,9 @@
             <section class='post'>
               <h1>
 
-                
+                熟练掌握JavaScript闭包
               </h1>
-              <h3 id="熟练掌握JavaScript闭包"><a href="#熟练掌握JavaScript闭包" class="headerlink" title="熟练掌握JavaScript闭包"></a>熟练掌握JavaScript闭包</h3><h4 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h4><p>先看一段代码：</p>
+              <h4 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h4><p>先看一段代码：</p>
 <pre><code class="javascript">var scope = &quot;global scope&quot;; 
 function checkScope() {
     var scope = &quot;local scope&quot;;
@@ -69,7 +69,7 @@ function checkScope() {
 }
 checkScope();   //=&gt; &quot;local scope&quot;
 </code></pre>
-<p>分析一下上面的代码，该代码定义了一个全局变量 scope，以及一个函数checkScope,在函数checkScope中，定一个一个局部变量，同样命名为scope，以及一个函数 f (嵌套函数)。<br><img src="./1517650548797.png" alt="Alt text"></p>
+<p>分析一下上面的代码，该代码定义了一个全局变量 scope，以及一个函数checkScope,在函数checkScope中，定一个一个局部变量，同样命名为scope，以及一个函数 f (嵌套函数)。</p>
 <p>checkScope被调用时，return f()，运行内部嵌套函数f,f沿着作用域链从内向外寻找变量scope，找到“local scope”，停止寻找，因此，函数返回 “local scope”;</p>
 <p>接下来，代码稍作修改：</p>
 <pre><code class="javascript">var scope = &quot;global scope&quot;; 
@@ -134,7 +134,7 @@ console.log(person.getName());    //abc
     }
 }())
 </code></pre>
-<p>(3)  通过循环给页面上多个dom节点绑定事件<br>场景描述：假如页面上有5个button,要给button绑定onclick事件，点击的时候，弹出对应button的索引编号。<br><img src="./1517660681616.png" alt="Alt text"></p>
+<p>(3)  通过循环给页面上多个dom节点绑定事件<br>场景描述：假如页面上有5个button,要给button绑定onclick事件，点击的时候，弹出对应button的索引编号。</p>
 <pre><code class="javascript">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
