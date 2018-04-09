@@ -56,26 +56,55 @@
 
                  css中一些常用选择器的介绍
               </h1>
-              <p><strong>1.元素选择器</strong><br>        这是最基本的css选择器，html文档本身的元素就是一个选择器。<br>        <code>body{font-family:&quot;Microsoft Yahei&quot;;text-align:center;background-color: #eff0f0}</code></p>
-<p> <strong>2.关系选择器</strong><br>         A B：后代选择器，此选择器作用于Ａ后代中所有的B元素。<br>        <code>ul li {margin-bottom:0.5em;}</code></p>
-<p>A&gt;B:子选择器，此选择器作用于Ａ后代中所有的B元素，他将忽略任何进一步的嵌套。<br>        <code>ul &gt; li {list-style:none;} //仅限ul的直接子元素li，如果li里面还嵌套着另一个 ul 结构时，最里面的 li 将被忽略</code></p>
-<p>A+B：相邻兄弟选择器，此选择器作用于与A元素具有相同父元素且在标记中紧邻A的B元素。<br><code>li + li {border-top:1px solid #ddd;} //定位具有相同父元素ul里除第一个li之外的所有li</code></p>
-<p>A~B:一般兄弟选择器，此选择器作用于与A元素具有相同父元素且在标记中位于A元素之后的元素。<br> <code>h1 ~ p {color:#f00;} //定位具有相同父元素的，h1标签之后的所有p标签</code></p>
-<p>  <strong>3.派生选择器</strong><br>      派生选择器允许你根据文档的上下文关系来确定某个标签的样式。通过合理地使用派生选择器，可以使标记更加简洁。<br>      比方说，你希望列表中的 strong 元素变为斜体字，而不是通常的粗体字，可以这样定义一个派生选择器：<code>li strong {
-                font-style: italic;
-                font-weight: normal;
-  }</code></p>
-<p><strong>4.id选择器</strong><br>    id 选择器可以为标有特定 id 的 HTML 元素指定特定的样式，id 选择器以 “#” 来定义。</p>
-<p><code>#red {color:red;}</code><br><code>#green {color:green;}</code></p>
-<p><em>id 选择器和派生选择器</em><br>在现代布局中，id 选择器常常用于建立派生选择器。<br><code>#sidebar p {
-    font-style: italic;
-    text-align: right;
-    margin-top: 0.5em;
-    }</code><br>    上面的样式只会应用于出现在 id 是 sidebar 的元素内的段落。这个元素很可能是 div 或者是表格单元，尽管它也可能是一个表格或者其他块级元素。</p>
-<p><strong>5.类选择器</strong><br>在 CSS 中，类选择器以一个点号显示：<br><code>.center {text-align: center}</code><br>和 id 一样，class 也可被用作派生选择器：<br><code>.fancy td {
-    color: #f60;
-    background: #666;
-    }</code><br>    在上面这个例子中，类名为 fancy 的更大的元素内部的表格单元都会以灰色背景显示橙色文字。（名为 fancy 的更大的元素可能是一个表格或者一个 div）<br><strong>6.伪类选择器</strong><br>:link：未访问的链接；<br>:visited：已访问的链接，不建议使用；<br>:hover：鼠标移动到容器，不仅限于链接，可用于页面中的任何元素；<br>:active：被激活时的状态，不仅限于链接，可用于任何具有tabindex属性的元素；<br>:focus：获得焦点时状态，不仅限于链接，可用于任何具有tabindex属性的无线：<br><code>input:focus {border:1px solid #333;} //输入框获得焦点时的样式</code><br>:enabled：已启用的界面元素：<br><code>input:enabled {border:1px solid #899;}</code><br>:disabled：已禁用的界面元素：<br><code>input:disabled {background:#eee;}</code></p>
+              <p><strong>1.元素选择器</strong><br>这是最基本的css选择器，html文档本身的元素就是一个选择器。</p>
+<pre><code class="css">body{font-family:&quot;Microsoft Yahei&quot;;text-align:center;background-color: #eff0f0}
+</code></pre>
+<p><strong>2.关系选择器</strong><br>A B：后代选择器，此选择器作用于Ａ后代中所有的B元素。        </p>
+<pre><code class="css">ul li {margin-bottom:0.5em;}
+</code></pre>
+<p>A&gt;B:子选择器，此选择器作用于Ａ后代中所有的B元素，他将忽略任何进一步的嵌套。</p>
+<pre><code class="css">ul &gt; li {list-style:none;} //仅限ul的直接子元素li，如果li里面还嵌套着另一个 ul 结构时，最里面的 li 将被忽略
+</code></pre>
+<p>A+B：相邻兄弟选择器，此选择器作用于与A元素具有相同父元素且在标记中紧邻A的B元素。</p>
+<pre><code class="css">li + li {border-top:1px solid #ddd;} //定位具有相同父元素ul里除第一个li之外的所有li
+</code></pre>
+<p>A~B:一般兄弟选择器，此选择器作用于与A元素具有相同父元素且在标记中位于A元素之后的元素。</p>
+<pre><code class="css">h1 ~ p {color:#f00;} //定位具有相同父元素的，h1标签之后的所有p标签
+</code></pre>
+<p><strong>3.派生选择器</strong><br>派生选择器允许你根据文档的上下文关系来确定某个标签的样式。通过合理地使用派生选择器，可以使标记更加简洁。<br>比方说，你希望列表中的 strong 元素变为斜体字，而不是通常的粗体字，可以这样定义一个派生选择器：</p>
+<pre><code class="css">li strong {
+font-style: italic;
+font-weight: normal;
+}
+</code></pre>
+<p><strong>4.id选择器</strong><br>id 选择器可以为标有特定 id 的 HTML 元素指定特定的样式，id 选择器以 “#” 来定义。</p>
+<pre><code class="css">#red {color:red;}
+</code></pre>
+<pre><code class="css">#green {color:green;}
+</code></pre>
+<p><em>id 选择器和派生选择器</em><br>在现代布局中，id 选择器常常用于建立派生选择器。<br>``` css#sidebar p {<br>font-style: italic;<br>text-align: right;<br>margin-top: 0.5em;<br>}</p>
+<pre><code>上面的样式只会应用于出现在 id 是 sidebar 的元素内的段落。这个元素很可能是 div 或者是表格单元，尽管它也可能是一个表格或者其他块级元素。
+
+**5.类选择器**
+在 CSS 中，类选择器以一个点号显示：
+``` css 
+.center {text-align: center}
+</code></pre><p>和 id 一样，class 也可被用作派生选择器：</p>
+<pre><code class="css">.fancy td {
+color: #f60;
+background: #666;
+}
+</code></pre>
+<p>在上面这个例子中，类名为 fancy 的更大的元素内部的表格单元都会以灰色背景显示橙色文字。（名为 fancy 的更大的元素可能是一个表格或者一个 div）<br><strong>6.伪类选择器</strong></p>
+<p>:link：未访问的链接；<br>:visited：已访问的链接，不建议使用；<br>:hover：鼠标移动到容器，不仅限于链接，可用于页面中的任何元素；<br>:active：被激活时的状态，不仅限于链接，可用于任何具有tabindex属性的元素；<br>:focus：获得焦点时状态，不仅限于链接，可用于任何具有tabindex属性的无线：</p>
+<pre><code class="css">input:focus {border:1px solid #333;} //输入框获得焦点时的样式
+</code></pre>
+<p>:enabled：已启用的界面元素：</p>
+<pre><code class="css">input:enabled {border:1px solid #899;}
+</code></pre>
+<p>:disabled：已禁用的界面元素：</p>
+<pre><code class="css">input:disabled {background:#eee;}
+</code></pre>
 <p>以上是css中一些基本的常用选择器，熟练搭配使用这些选择器，可以很方便的让你代码更加简洁！<br>ps:以上参考资料 <a href="http://www.uisdc.com/css-selector；w3cshcool；" target="_blank" rel="noopener">http://www.uisdc.com/css-selector；w3cshcool；</a><br>pps：第一次写博客，心里还有点小激动呢，哈哈哈！</p>
 
                 <br>
