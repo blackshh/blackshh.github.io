@@ -1,0 +1,177 @@
+<html>
+
+<head>
+  <title>
+    JavaScript 函数传参是按地址还是按值传递？ -
+      blackshh
+  </title>
+  <link href='/images/fav.png' rel='shortcut icon'>
+<link href='/atom.xml' rel='alternate' type='application/rss+xml'>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<script src="/js/jquery.js"></script>
+<script src="/js/basics.js"></script>
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type'>
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+  <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+</head>
+
+<body>
+  <header>
+  <a id='go-back-home' href='/'><img src='/images/scribble.png' alt='Home' width='70' height='70'></a>
+  <p>blackshh</p>
+  <p>纸上得来终觉浅，绝知此事要躬行。</p>
+</header>
+
+    <div id='container'>
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+        <section class='paging'>
+  
+  
+    <div class='right'>
+      <a href='/2018/03/27/将Cmder添加到系统右键菜单中/'>
+        ›
+      </a>
+    </div>
+  
+</section>
+
+          <div class='content'>
+            <section class='post'>
+              <h1>
+
+                JavaScript 函数传参是按地址还是按值传递？
+              </h1>
+              <h2 id="先从一道题入手"><a href="#先从一道题入手" class="headerlink" title="先从一道题入手"></a>先从一道题入手</h2><pre><code class="javascript">var setPerson = function(person){
+    person.name = &quot;kevin&quot;;
+    person = {name:&quot;rick&quot;};
+};
+var person = {name:&quot;alan&quot;};
+setPerson(person);
+alert(person.name);
+</code></pre>
+<p>这道题一开始我以为结果会是 “rick”，后来觉得不会这么简单，会不会涉及到变量提升，<br>其实这个题结果是 “kevin”，惊不惊喜，意不意外？</p>
+<p>想要弄懂这道题，必须要从Js的函数传参说起，这里有一个提问“Js函数是按值传递还是按地址传递？”<br>《js高级程序设计》上是这样叙述参数传递的：<br>所有函数的参数都是按值传递的,也就是说把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样。<br>这里有一个误区就是如果参数是对象（Object）的话，在一些情况下看起来好像是按地址传递的，比如：</p>
+<pre><code class="javascript">var person = {
+    name : &quot;Tom&quot;
+};
+function obj(peo){
+    peo.name = &quot;Jerry&quot;;
+}
+var result = obj(person);
+console.log(person.name);// Jerry
+</code></pre>
+<p>通过函数里面对 peo.name 的修改，外部的person对象的name属性也发生了变化，这乍一看感觉参数就是按照引用传递的。<br>那我们再来看看这个例子：</p>
+<pre><code class="javascript">var person = {
+name : &quot;Tom&quot;
+};
+function obj(peo){
+peo = {
+name : &quot;Jerry&quot;
+};
+}
+var result = obj(person);
+console.log(person.name);// Tom
+</code></pre>
+<p>在这个例子中，person对象通过函数传递给peo，在函数内peo被重新赋值，如果是按地址传递，那person应该也被重新赋值了。<br>但结果中person.name 还是”Tom”，从这里就可以看出Js函数其实不是按地址传递的。但是本文中第二个例子是怎么回事呢？<br>想要弄明白这一点，就必须去了解“JS数据类型存储”。</p>
+<p>JS有哪些数据类型？<br>JS包含量大数据类型，一种是基本数据类型(String、Number、Boolean、undefined、null)；另外一种是引用类型（Object）。</p>
+<p>数据的存储方式有哪些？</p>
+<pre><code>* 栈区：存放函数的参数值，局部变量的值（先进后出）
+* 堆区：由程序员分配释放，分配方式类似链表（任意顺序）
+* 全局区: 全局变量和静态变量
+* 文字常量区: 常量
+* 程序代码区：函数二进制码
+</code></pre><p>JS中的基础类型和引用类型是怎么存储的？</p>
+<p>基础类型的数据存储在栈区</p>
+<pre><code class="javascript">var name = &quot;Tom
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Key</th>
+<th style="text-align:right">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">name</td>
+<td style="text-align:right">Tom</td>
+</tr>
+</tbody>
+</table>
+<p>引用类型的数据存储在堆区</p>
+<pre><code class="javascript">var a = new Object()
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Key</th>
+<th style="text-align:right">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">a</td>
+<td style="text-align:right">对象的地址</td>
+</tr>
+</tbody>
+</table>
+<p>了解到这里文章开始的那道题就很简单了，让我们回顾一下：</p>
+<p>var setPerson = function(person){<br>    person.name = “kevin”;<br>    person = {name:”rick”};<br>};<br>var person = {name:”alan”};<br>setPerson(person);<br>alert(person.name);</p>
+<p>首先定义了一个person对象<br>key<br>value<br>person<br>对象person的地址<br>堆内存：<br>对象person的值：{name:”alan”}<br>执行setPerson<br>key<br>value<br>person<br>对象person的地址<br>形参person<br>对象person的地址<br>堆内存：<br>对象person的值：{name:”alan”}<br>这里只是把person对象的值传递给了形参，是按值传递，接下来执行 </p>
+<p>person.name = “kevin”;<br>key<br>value<br>person<br>对象person的地址<br>形参person<br>对象person的地址<br>堆内存：<br>对象person的值：{name:”kevin”}<br>可以看出这里仅仅修改了堆内存中name的值，接下来执行</p>
+<p> person = {name:”rick”};<br>key<br>value<br>person<br>对象person的地址<br>形参person<br>对象person的地址<br>堆内存：<br>对象person的值：{name:”kevin”}<br>形参person的值：{name:”rick”}<br>所以在alert（person.name）时，输出的是外侧person对象的name，结果是“kevin”。</p>
+<p>总结</p>
+<p>这道题还是很不错的，考查了几个基础的知识点，这些在实际开发中也是很有用的，如果你不了解Js函数的传值<br>在开发可能会掉进坑里。</p>
+
+                <br>
+<div class='date' style="text-align: right">
+    <p><strong>blackshh</strong></p>
+    <p>2018-07-21</p>
+</div>
+
+
+
+            </section>
+          </div>
+          
+                <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+    </div>
+    <footer>
+  <span class='muted'>blackshh@2017</span><br>
+  <span>built with Hexo using <a class='muted' href="https://github.com/chloerei/scribble">Scribble</a></span>
+  <br>
+  <br>
+</footer>
+
+</body>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+</html>
