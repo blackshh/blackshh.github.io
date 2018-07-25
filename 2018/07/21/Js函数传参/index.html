@@ -77,12 +77,12 @@ console.log(person.name);// Jerry
 </code></pre>
 <p>通过函数里面对 peo.name 的修改，外部的person对象的name属性也发生了变化，这乍一看感觉参数就是按照引用传递的。<br>那我们再来看看这个例子：</p>
 <pre><code class="javascript">var person = {
-name : &quot;Tom&quot;
+    name : &quot;Tom&quot;
 };
 function obj(peo){
-peo = {
-name : &quot;Jerry&quot;
-};
+    peo = {
+        name : &quot;Jerry&quot;
+    };
 }
 var result = obj(person);
 console.log(person.name);// Tom
@@ -99,42 +99,19 @@ console.log(person.name);// Tom
 <p>基础类型的数据存储在栈区</p>
 <pre><code class="javascript">var name = &quot;Tom
 </code></pre>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Key</th>
-<th style="text-align:right">Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">name</td>
-<td style="text-align:right">Tom</td>
-</tr>
-</tbody>
-</table>
 <p>引用类型的数据存储在堆区</p>
 <pre><code class="javascript">var a = new Object()
 </code></pre>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Key</th>
-<th style="text-align:right">Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">a</td>
-<td style="text-align:right">对象的地址</td>
-</tr>
-</tbody>
-</table>
 <p>了解到这里文章开始的那道题就很简单了，让我们回顾一下：</p>
-<p>var setPerson = function(person){<br>    person.name = “kevin”;<br>    person = {name:”rick”};<br>};<br>var person = {name:”alan”};<br>setPerson(person);<br>alert(person.name);</p>
-<p>首先定义了一个person对象<br>key<br>value<br>person<br>对象person的地址<br>堆内存：<br>对象person的值：{name:”alan”}<br>执行setPerson<br>key<br>value<br>person<br>对象person的地址<br>形参person<br>对象person的地址<br>堆内存：<br>对象person的值：{name:”alan”}<br>这里只是把person对象的值传递给了形参，是按值传递，接下来执行 </p>
-<p>person.name = “kevin”;<br>key<br>value<br>person<br>对象person的地址<br>形参person<br>对象person的地址<br>堆内存：<br>对象person的值：{name:”kevin”}<br>可以看出这里仅仅修改了堆内存中name的值，接下来执行</p>
-<p> person = {name:”rick”};<br>key<br>value<br>person<br>对象person的地址<br>形参person<br>对象person的地址<br>堆内存：<br>对象person的值：{name:”kevin”}<br>形参person的值：{name:”rick”}<br>所以在alert（person.name）时，输出的是外侧person对象的name，结果是“kevin”。</p>
+<pre><code class="javascript">var setPerson = function(person){
+    person.name = &quot;kevin&quot;;
+    person = {name:&quot;rick&quot;};
+};
+var person = {name:&quot;alan&quot;};
+setPerson(person);
+alert(person.name);
+</code></pre>
+<p>首先定义了一个person对象,栈内存中存了一个变量名person，它的值是person这个对象实际内存在堆内存中的地址，接下来执行setPerson，这里是把person对象的值传递给了形参，也就是把person对象在堆内存中的地址给赋给形参，接下来执行  person.name = “kevin”，修改堆内存中person对象name值，然后执行 person = {name:”rick”} 。这句话分为两部：第一，在堆内存中新建一个{name:”rick”}对象；第二，把形参重新指向了这个新的对象。<br>所以在alert（person.name）时，输出的是外侧person对象的name，结果是“kevin”。</p>
 <p>总结</p>
 <p>这道题还是很不错的，考查了几个基础的知识点，这些在实际开发中也是很有用的，如果你不了解Js函数的传值<br>在开发可能会掉进坑里。</p>
 
