@@ -1,0 +1,147 @@
+<html>
+
+<head>
+  <title>
+    通过jQuery Ajax使用FormData对象上传文件 -
+      blackshh
+  </title>
+  <link href='/images/fav.png' rel='shortcut icon'>
+<link href='/atom.xml' rel='alternate' type='application/rss+xml'>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<script src="/js/jquery.js"></script>
+<script src="/js/basics.js"></script>
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type'>
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+  <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+</head>
+
+<body>
+  <header>
+  <a id='go-back-home' href='/'><img src='/images/scribble.png' alt='Home' width='70' height='70'></a>
+  <p>blackshh</p>
+  <p>纸上得来终觉浅，绝知此事要躬行。</p>
+</header>
+
+    <div id='container'>
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+        <section class='paging'>
+  
+    <div class='left'>
+      <a href='/2016/08/29/ubuntu14.04 apache2 开启 htaccess支持/'>
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class='right'>
+      <a href='/2016/02/24/css中一些常用选择器的介绍/'>
+        ›
+      </a>
+    </div>
+  
+</section>
+
+          <div class='content'>
+            <section class='post'>
+              <h1>
+
+                通过jQuery Ajax使用FormData对象上传文件
+              </h1>
+              <p>FormData对象，是可以使用一系列的键值对来模拟一个完整的表单，然后使用XMLHttpRequest发送这个”表单”。</p>
+<p>但上传文件部分只有底层的XMLHttpRequest对象发送上传请求，那么怎么通过jQuery的Ajax上传呢？本文将介绍通过jQuery使用FormData对象上传文件。</p>
+<p>使用<form>表单初始化FormData对象方式上传文件</form></p>
+<pre><code class="html">&lt;form id=&quot;uploadForm&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    &lt;input id=&quot;file&quot; type=&quot;file&quot; name=&quot;file&quot;/&gt;
+    &lt;button id=&quot;upload&quot; type=&quot;button&quot;&gt;upload&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+<pre><code class="javascript">$.ajax({
+    url: &#39;/upload&#39;,
+    type: &#39;POST&#39;,
+    cache: false,
+    data: new FormData($(&#39;#uploadForm&#39;)[0]),
+    processData: false,
+    contentType: false
+}).done(function(res) {
+}).fail(function(res) {});
+</code></pre>
+<p>这里要注意几点：<br>processData设置为false。因为data值是FormData对象，不需要对数据做处理。</p>
+<p>form标签添加enctype=”multipart/form-data”属性。</p>
+<p>cache设置为false，上传文件不需要缓存。</p>
+<p>contentType设置为false。因为是由form表单构造的FormData对象，且已经声明了属性enctype=”multipart/form-data”，所以这里设置为false。</p>
+<p>上传后，服务器端代码需要使用从查询参数名为file获取文件输入流对象，因为input中声明的是name=”file”。</p>
+<p>如果不是用form表单构造FormData对象又该怎么做呢？</p>
+<p>使用FormData对象添加字段方式上传文件</p>
+<pre><code class="html">&lt;div id=&quot;uploadForm&quot;&gt;
+    &lt;input id=&quot;file&quot; type=&quot;file&quot;/&gt;
+    &lt;button id=&quot;upload&quot; type=&quot;button&quot;&gt;upload&lt;/button&gt;
+&lt;/div&gt;
+</code></pre>
+<p>这里没有form标签，也没有enctype=”multipart/form-data”属性。</p>
+<pre><code class="javascript">var formData = new FormData();
+formData.append(&#39;file&#39;, $(&#39;#file&#39;)[0].files[0]);
+$.ajax({
+    url: &#39;/upload&#39;,
+    type: &#39;POST&#39;,
+    cache: false,
+    data: formData,
+    processData: false,
+    contentType: false
+}).done(function(res) {
+}).fail(function(res) {});
+</code></pre>
+<p>这里有几处不一样：<br>• append()的第二个参数应是文件对象，即$(‘#file’)[0].files[0]。<br>• contentType也要设置为‘false’。</p>
+<p>从代码$(‘#file’)[0].files[0]中可以看到一个 &#60;input type=”file”&#62; 标签能够上传多个文件，<br>只需要在 &#60;input type=”file”&#62; 里添加multiple或multiple=”multiple”属性。</p>
+
+                <br>
+<div class='date' style="text-align: right">
+    <p><strong>blackshh</strong></p>
+    <p>2016-05-28</p>
+</div>
+
+
+
+            </section>
+          </div>
+          
+                <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+    </div>
+    <footer>
+  <span class='muted'>blackshh@2017</span><br>
+  <span>built with Hexo using <a class='muted' href="https://github.com/chloerei/scribble">Scribble</a></span>
+  <br>
+  <br>
+</footer>
+
+</body>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+</html>

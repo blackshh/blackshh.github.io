@@ -1,0 +1,153 @@
+<html>
+
+<head>
+  <title>
+    Java内存分析和String对象 -
+      blackshh
+  </title>
+  <link href='/images/fav.png' rel='shortcut icon'>
+<link href='/atom.xml' rel='alternate' type='application/rss+xml'>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<script src="/js/jquery.js"></script>
+<script src="/js/basics.js"></script>
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type'>
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+  <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+</head>
+
+<body>
+  <header>
+  <a id='go-back-home' href='/'><img src='/images/scribble.png' alt='Home' width='70' height='70'></a>
+  <p>blackshh</p>
+  <p>纸上得来终觉浅，绝知此事要躬行。</p>
+</header>
+
+    <div id='container'>
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+        <section class='paging'>
+  
+    <div class='left'>
+      <a href='/2017/03/22/java使用移位运算进行进制转化/'>
+        ‹
+      </a>
+    </div>
+  
+  
+    <div class='right'>
+      <a href='/2016/08/29/ubuntu14.04 apache2 开启 htaccess支持/'>
+        ›
+      </a>
+    </div>
+  
+</section>
+
+          <div class='content'>
+            <section class='post'>
+              <h1>
+
+                Java内存分析和String对象
+              </h1>
+              <p>###Java中内存分析</p>
+<p>  栈(Stack) ：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中（字符串常量对象存放在常量池中）。</p>
+<p>  堆(heap)：存放所有new出来的对象。</p>
+<p>  常量池(constant pool)：在堆中分配出来的一块存储区域，存放储显式的String常量和基本类型常量(float、int等)。另外，可以存储不经常改变的东西(public static final)。常量池中的数据可以共享。</p>
+<p>  静态存储：存放静态成员（static定义的）。</p>
+<p><img src="http://img.blog.csdn.net/20160831172325300" alt="这里写图片描述"></p>
+<p>###String对象</p>
+<p>1)</p>
+<pre><code>String a = &quot;abc&quot;;①
+String b = &quot;abc&quot;;②
+</code></pre><p>　　<br>　　分析：<br>　　  ①代码执行后在常量池(constant pool)中创建了一个值为abc的String对象。<br>　　  ②执行时，因为常量池中存在”abc”所以就不再创建新的String对象了。</p>
+<p>2)</p>
+<pre><code>String   c   =   new   String(&quot;xyz&quot;);①
+String   d   =   new   String(&quot;xyz&quot;);②
+</code></pre><p>　　分析：<br>　　①Class被加载时，”xyz”被作为常量读入，在常量池(constant pool)里创建了一个共享的值为”xyz”。<br>　　的 String对象；然后当调用到new String(“xyz”)的时候，会在堆(heap)里创建这个new   String(“xyz”)对象。<br>　　②由于常量池(constant pool)中存在”xyz”所以不再创建”xyz”，然后创建新的new String(“xyz”)。<br>　　<br>3)</p>
+<pre><code>　　String   s1   =   new   String(&quot;xyz&quot;);     //创建二个对象(常量池和栈中)，一个引用 
+　　String   s2   =   new   String(&quot;xyz&quot;);     //创建一个对象(栈中)，并且以后每执行一次创建一个对象，一个引用
+</code></pre><pre><code>　　String   s3   =   &quot;xyz&quot;;     //创建一个对象(常量池中)，一个引用   
+　　String   s4   =   &quot;xyz&quot;;     //不创建对象(共享上次常量池中的数据)，只是创建一个新的引用
+</code></pre><p>4) </p>
+<pre><code>public class TestStr { 
+  public static void main(String[] args) { 
+    // 以下两条语句创建了1个对象。&quot;凤山&quot;存储在字符串常量池中 
+    String str1 = &quot;凤山&quot;; 
+    String str2 = &quot;凤山&quot;; 
+    System.out.println(str1==str2);//true 
+
+    //以下两条语句创建了3个对象。&quot;天峨&quot;，存储在字符串常量池中，两个new String()对象存储在堆内存中 
+    String str3 = new String(&quot;天峨&quot;); 
+    String str4 = new String(&quot;天峨&quot;); 
+    System.out.println(str3==str4);//false 
+
+    //以下两条语句创建了1个对象。9是存储在栈内存中 
+    int i = 9; 
+    int j = 9; 
+    System.out.println(i==j);//true 
+
+    //由于没有了装箱，以下两条语句创建了2个对象。两个1对象存储在堆内存中 
+    Integer l1 = new Integer(1); 
+    Integer k1 = new Integer(1); 
+    System.out.println(l1==k1);//false 
+　　 //以下两条语句创建了1个对象。1对象存储在栈内存中。自动装箱时对于值从127之间的值，使用一个实例。
+    Integer l = 20;//装箱 
+    Integer k = 20;//装箱 
+    System.out.println(l==k);//true 
+    //以下两条语句创建了2个对象。i1,i2变量存储在栈内存中，两个256对象存储在堆内存中 
+    Integer i1 = 256; 
+    Integer i2 = 256; 
+    System.out.println(i1==i2);//false 
+  } 
+}
+</code></pre>
+                <br>
+<div class='date' style="text-align: right">
+    <p><strong>blackshh</strong></p>
+    <p>2016-08-31</p>
+</div>
+
+
+
+            </section>
+          </div>
+          
+                <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+    </div>
+    <footer>
+  <span class='muted'>blackshh@2017</span><br>
+  <span>built with Hexo using <a class='muted' href="https://github.com/chloerei/scribble">Scribble</a></span>
+  <br>
+  <br>
+</footer>
+
+</body>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+</html>
