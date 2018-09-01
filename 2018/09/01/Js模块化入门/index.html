@@ -1,0 +1,237 @@
+<html>
+
+<head>
+  <title>
+    Js模块化入门 -
+      blackshh
+  </title>
+  <link href='/images/fav.png' rel='shortcut icon'>
+<link href='/atom.xml' rel='alternate' type='application/rss+xml'>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/responsive.css">
+<script src="/js/jquery.js"></script>
+<script src="/js/basics.js"></script>
+<meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type'>
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+  <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+</head>
+
+<body>
+  <header>
+  <a id='go-back-home' href='/'><img src='/images/scribble.png' alt='Home' width='70' height='70'></a>
+  <p>blackshh</p>
+  <p>纸上得来终觉浅，绝知此事要躬行。</p>
+</header>
+
+    <div id='container'>
+      <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+        <section class='paging'>
+  
+  
+    <div class='right'>
+      <a href='/2018/07/21/Js函数传参/'>
+        ›
+      </a>
+    </div>
+  
+</section>
+
+          <div class='content'>
+            <section class='post'>
+              <h1>
+
+                Js模块化入门
+              </h1>
+              <h2 id="什么是模块化开发？"><a href="#什么是模块化开发？" class="headerlink" title="什么是模块化开发？"></a>什么是模块化开发？</h2><p>前端开发中，起初只要在script标签中嵌入几十上百行代码就能实现一些基本的交互效果，后来js得到重视，应用也广泛起来了，jQuery，Ajax，Node.Js，MVC，MVVM等的助力也使得前端开发得到重视，也使得前端项目越来越复杂。模块化在项目中十分的重要，一个复杂的项目肯定有很多相似的功能模块，如果每次都需要重新编写模块肯定既费时又耗力。但是引用别人编写模块的前提是要有统一的“打开姿势”，如果每个人有各自的写法，那么肯定会乱套，下面介绍几种JS的模块化的规范。</p>
+<h2 id="script标签"><a href="#script标签" class="headerlink" title="script标签"></a>script标签</h2><p>这是最原始的 JavaScript 文件加载方式，如果把每一个文件看做是一个模块，那么他们的接口通常是暴露在全局作用域下，也就是定义在 window 对象中，不同模块的接口调用都是一个作用域中，一些复杂的框架，会使用命名空间的概念来组织这些模块的接口。</p>
+<p>缺点:</p>
+<ol>
+<li>污染全局作用域</li>
+<li>开发人员必须主观解决模块和代码库的依赖关系</li>
+<li>文件只能按照script标签的书写顺序进行加载</li>
+<li>在大型项目中各种资源难以管理，长期积累的问题导致代码库混乱不堪</li>
+</ol>
+<h2 id="CommonJS规范"><a href="#CommonJS规范" class="headerlink" title="CommonJS规范"></a>CommonJS规范</h2><p>该规范的核心思想是允许模块通过require方法来同步加载所要依赖的其他模块，然后通过exports或module.exports来导出需要暴露的接口。</p>
+<pre><code class="javascript">require(&quot;module&quot;);
+require(&quot;../file.js&quot;);
+exports.doStuff = function() {};
+module.exports = someValue;
+</code></pre>
+<p>优点：</p>
+<ol>
+<li>简单并容易使用</li>
+<li>服务器端模块便于重用</li>
+</ol>
+<p>缺点:</p>
+<ol>
+<li>同步的模块加载方式不适合在浏览器环境中，同步意味着阻塞加载，浏览器资源是异步加载的</li>
+<li>不能非阻塞的并行加载多个模块</li>
+</ol>
+<p>module.exports与exports的区别</p>
+<ol>
+<li>exports 是指向的 module.exports 的引用</li>
+<li>module.exports 初始值为一个空对象 {}，所以 exports 初始值也是 {}</li>
+<li>require() 返回的是 module.exports 而不是 exports</li>
+</ol>
+<p>exports示例：</p>
+<pre><code class="javascript">// app.js
+var circle = require(&#39;./circle&#39;);
+console.log(circle.area(4));
+// circle.js
+exports.area = function(r) {
+  return r * r * Math.PI;
+}
+</code></pre>
+<p>module.exports示例：</p>
+<pre><code class="javascript">// app.js
+var area = require(&#39;./area&#39;);
+console.log(area(4));
+// area.js
+module.exports = function(r) {
+  return r * r * Math.PI;
+}
+</code></pre>
+<p>错误的情况：</p>
+<pre><code class="javascript">// app.js
+var area = require(&#39;./area&#39;);
+console.log(area(4));
+// area.js
+exports = function(r) {
+  return r * r * Math.PI;
+}
+</code></pre>
+<p>其实是对 exports 进行了覆盖，也就是说 exports 指向了一块新的内存（内容为一个计算圆面积的函数），也就是说 exports 和 module.exports 不再指向同一块内存，也就是说此时 exports 和 module.exports 毫无联系，也就是说 module.exports 指向的那块内存并没有做任何改变，仍然为一个空对象{}，也就是说area.js导出了一个空对象，所以我们在 app.js 中调用 area(4) 会报 TypeError: object is not a function 的错误。</p>
+<p>总结：当我们想让模块导出的是一个对象时， exports 和 module.exports 均可使用（但 exports 也不能重新覆盖为一个新的对象），而当我们想导出非对象接口时，就必须也只能覆盖 module.exports。</p>
+<h2 id="AMD规范"><a href="#AMD规范" class="headerlink" title="AMD规范"></a>AMD规范</h2><p>由于浏览器端的模块不能采用同步的方式加载，会影响后续模块的加载执行，因此AMD(Asynchronous Module Definition异步模块定义)规范诞生了。<br>AMD标准中定义了以下两个API</p>
+<ol>
+<li>require([module], callback);</li>
+<li>define(id, [depends], callback);<br>require接口用来加载一系列模块，define接口用来定义并暴露一个模块。</li>
+</ol>
+<p>示例：</p>
+<pre><code class="javascript">define(&quot;module&quot;, [&quot;dep1&quot;, &quot;dep2&quot;], function(d1, d2) {
+  return someExportedValue;
+});
+require([&quot;module&quot;, &quot;../file&quot;], function(module, file) { /* ... */ });
+</code></pre>
+<p>优点：</p>
+<ol>
+<li>适合在浏览器环境中异步加载模块</li>
+<li>可以并行加载多个模块</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>提高了开发成本，代码的阅读和书写比较困难，模块定义方式的语义不顺畅</li>
+<li>不符合通用的模块化思维方式，是一种妥协的实现</li>
+</ol>
+<h2 id="CMD规范"><a href="#CMD规范" class="headerlink" title="CMD规范"></a>CMD规范</h2><p>CMD(Common Module Definition)规范和AMD很相似，尽量保持简单，并与CommonJS和Node.js的 Modules 规范保持了很大的兼容性。在CMD规范中，一个模块就是一个文件。</p>
+<p>示例：</p>
+<pre><code class="javascript">define(function(require, exports, module) {
+  var $ = require(&#39;jquery&#39;);
+  var Spinning = require(&#39;./spinning&#39;);
+  exports.doSomething = ...
+  module.exports = ...
+})
+</code></pre>
+<p>优点：</p>
+<ol>
+<li>依赖就近，延迟执行</li>
+<li>可以很容易在 Node.js 中运行</li>
+</ol>
+<p>缺点：</p>
+<ul>
+<li>依赖 SPM 打包，模块的加载逻辑偏重</li>
+</ul>
+<h2 id="AMD和CMD的区别"><a href="#AMD和CMD的区别" class="headerlink" title="AMD和CMD的区别"></a>AMD和CMD的区别</h2><p>AMD和CMD起来很相似，但是还是有一些细微的差别，让我们来看一下他们的区别在哪里：</p>
+<ol>
+<li>对于依赖的模块，AMD是提前执行，CMD是延迟执行。</li>
+<li>AMD推崇依赖前置；CMD推崇依赖就近，只有在用到某个模块的时候再去require。看代码：<pre><code class="javascript">// AMD
+define([&#39;./a&#39;, &#39;./b&#39;], function(a, b) {  // 依赖必须一开始就写好  
+a.doSomething()    
+// 此处略去 100 行    
+b.doSomething()    
+...
+});
+// CMD
+define(function(require, exports, module) {
+var a = require(&#39;./a&#39;)   
+a.doSomething()   
+// 此处略去 100 行   
+var b = require(&#39;./b&#39;) 
+// 依赖可以就近书写   
+b.doSomething()
+// ... 
+});
+</code></pre>
+</li>
+<li>AMD 的 API 默认是一个当多个用，CMD 的 API 严格区分，推崇职责单一。</li>
+</ol>
+<h2 id="ES6模块化"><a href="#ES6模块化" class="headerlink" title="ES6模块化"></a>ES6模块化</h2><p>EcmaScript6标准增加了JavaScript语言层面的模块体系定义。ES6 模块的设计思想，是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量。CommonJS和AMD模块，都只能在运行时确定这些东西。</p>
+<p>在 ES6 中，我们使用export关键字来导出模块，使用import关键字引用模块。需要说明的是，ES6的这套标准和目前的标准没有直接关系，目前也很少有JS引擎能直接支持。因此Babel的做法实际上是将不被支持的import翻译成目前已被支持的require。</p>
+<p>尽管目前使用import和require的区别不大(本质上是一回事)，但依然强烈推荐使用import关键字，因为一旦JS引擎能够解析ES6的import关键字，整个实现方式就会和目前发生比较大的变化。如果目前就开始使用import关键字，将来代码的改动会非常小。</p>
+<p>示例：</p>
+<pre><code class="javascript">import &quot;jquery&quot;;
+export function doStuff() {}
+module &quot;localModule&quot; {}
+</code></pre>
+<p>优点：</p>
+<ol>
+<li>容易进行静态分析</li>
+<li>面向未来的 EcmaScript 标准</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>原生浏览器端还没有实现该标准</li>
+<li>全新的命令字，新版的 Node.js才支持</li>
+</ol>
+
+                <br>
+<div class='date' style="text-align: right">
+    <p><strong>blackshh</strong></p>
+    <p>2018-09-01</p>
+</div>
+
+
+
+            </section>
+          </div>
+          
+                <div class='block'>
+  
+    <a class='main' href='/'>Blog</a>
+  
+    <a class='main' href='/about'>About</a>
+  
+    <a class='main' href='mailto:blackshh@qq.com'>Email</a>
+  
+    <a class='main' href='https://github.com/blackshh'>Github</a>
+  
+</div>
+
+    </div>
+    <footer>
+  <span class='muted'>blackshh@2017</span><br>
+  <span>built with Hexo using <a class='muted' href="https://github.com/chloerei/scribble">Scribble</a></span>
+  <br>
+  <br>
+</footer>
+
+</body>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+</html>
