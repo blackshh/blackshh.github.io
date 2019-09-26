@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="http://s.lovebing.wang/index.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+webview
+</body>
+<script>
+  alert(swan.webview)
+    swan.webview.reLaunch({
+        url: '/test/index',
+        success() {
+            alert(1)
+        },
+        fail() {
+            alert(2)
+        }
+    })
+</script>
+
+</html>
