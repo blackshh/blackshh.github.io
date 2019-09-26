@@ -15,6 +15,15 @@ webview
     console.log(swan.getNetworkType)
     console.log(swan.webView)
     console.log(swan.webView.relaunch)
+    swan.webView.reLaunch({
+        url: 'test/index',
+        success(res) {
+            console.log(res)
+        },
+        fail(res) {
+            console.log(res)
+        }
+    })
 </script>
 
 </html>
