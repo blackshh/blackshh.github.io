@@ -14,16 +14,8 @@ webview
     console.log(123)
     console.log(swan.getNetworkType)
     console.log(swan.webView)
-    console.log(swan.webView.relaunch)
-    swan.webView.reLaunch({
-        url: 'test/index',
-        success(res) {
-            console.log(res)
-        },
-        fail(res) {
-            console.log(res)
-        }
-    })
+    console.log(swan.webView.navigateTo)
+    swan.webView.navigateTo({url: '/test/index'});
 </script>
 
 </html>
