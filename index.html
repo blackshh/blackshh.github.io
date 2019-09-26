@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -148,4 +148,40 @@ img {
         </ol>
     </div>
 </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://b.bdstatic.com/searchbox/icms/searchbox/js/swan-1.7.0.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+webview
+</body>
+<script>
+    // swan.webview.reLaunch({
+    //     url: '/test/index',
+    //     success() {
+    //         console.log(1)
+    //     },
+    //     fail() {
+    //         console.log(2)
+    //     }
+    // })
+
+    swan.getNetworkType({
+        success(res) {
+            alert(res.networkType)
+        },
+        fail(res) {
+            alert(res.networkType)
+        } 
+    })
+</script>
+
 </html>
