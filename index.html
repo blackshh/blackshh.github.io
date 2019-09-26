@@ -164,24 +164,24 @@ img {
 webview
 </body>
 <script>
-    // swan.webview.reLaunch({
-    //     url: '/test/index',
-    //     success() {
-    //         console.log(1)
-    //     },
-    //     fail() {
-    //         console.log(2)
-    //     }
-    // })
-
-    swan.getNetworkType({
-        success(res) {
-            alert(res.networkType)
+    swan.webview.reLaunch({
+        url: '/test/index',
+        success() {
+            alert(1)
         },
-        fail(res) {
-            alert(res.networkType)
-        } 
+        fail() {
+            alert(2)
+        }
     })
+
+//     swan.getNetworkType({
+//         success(res) {
+//             alert(res.networkType)
+//         },
+//         fail(res) {
+//             alert(res.networkType)
+//         } 
+//     })
 </script>
 
 </html>
